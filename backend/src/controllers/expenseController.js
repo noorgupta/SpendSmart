@@ -47,12 +47,35 @@ async function getExpenseById(req,res){
        });
     }
 }
-async function updateExpense(req,res){
+async function updateExpense(req, res) {
+  try {
+    const expense = await Expense.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!expense) {
+      return res.status(404).json({
+        success: false,
+        message: "Expense not found",
+      });
+    }
 
     res.status(200).json({
-        message: "Expense Updated Successfully"
-    })
+      success: true,
+      data: expense,
+    });
 
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 }
 async function deleteExpense(req,res){
 
