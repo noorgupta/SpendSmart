@@ -34,7 +34,7 @@ async function getExpenses(req,res){
 }
 async function getExpenseById(req,res){
     try{
-        const expenses = await Expenses.findById();
+        const expenses = await Expense.findById(req.params.id);
 
         res.status(200).json({
             success: true,
@@ -78,11 +78,25 @@ async function updateExpense(req, res) {
   }
 }
 async function deleteExpense(req,res){
+  try{
+    const expense = await Expense.findByIdAndDelete(req.params.id);
 
+    if(!expense){
+      return res.status(404).json({
+        success: false,
+        message: "Expense not found",
+      })
+    }
     res.status(200).json({
-        message: "Expense Deleted successfully"
-    })
-
+      success: true,
+      message: "Expense deleted successfully",
+    });
+  }catch(error){
+    res.status(500).json({
+        success: false,
+        message: error.message,
+    });
+  }
 }
 
 module.exports = {
