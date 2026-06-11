@@ -16,6 +16,24 @@ const registration = async (req, res) => {
       });
     }
 
+    //Validating Email 
+
+    if(!validator.isEmail(email)){
+      return res.status(400).json({
+        success: false,
+        message: "Please provide valid Email",
+      });
+    }
+
+    //Validating PhoneNumber 
+
+    if(!validator.isLength(password, { min: 6 })){
+      return res.status(400).json({
+        success: false,
+        message: "Password should be atleast 6 characters long "
+      });
+    }
+
     // Hash password
     const hashedPass = await bcrypt.hash(password, 10);
 
@@ -86,3 +104,4 @@ module.exports = {
     registration,
     login
 }
+
